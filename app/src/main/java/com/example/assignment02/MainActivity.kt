@@ -19,10 +19,13 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, RandomActivity::class.java)
 
         val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK)
+            if (result.resultCode == Activity.RESULT_OK) {
+                number_text.text = result.data?.getIntExtra("random_number", 0).toString()
                 Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show()
-            else
+            }
+            else {
                 Toast.makeText(this, "오류", Toast.LENGTH_SHORT).show()
+            }
         }
 
         count_btn.setOnClickListener {
