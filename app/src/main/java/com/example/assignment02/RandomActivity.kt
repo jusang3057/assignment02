@@ -11,7 +11,7 @@ class RandomActivity : AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_random)
         val number_text: TextView = findViewById(R.id.number_text)
-        val number = intent.getIntExtra("number", 1)
+        val number = intent.getIntExtra("number", 1) // 123
         val resultIntent = Intent()
 
         if (number > 0){
