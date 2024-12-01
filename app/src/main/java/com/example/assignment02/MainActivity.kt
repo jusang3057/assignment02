@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var add_button: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 포크용 변경
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
