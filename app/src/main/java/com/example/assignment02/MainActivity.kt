@@ -1,42 +1,73 @@
 package com.example.assignment02
 
-import android.app.Activity
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Button
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
+
+    val nameList = mutableListOf<String>()
+
+    lateinit var name_text: EditText
+    lateinit var recycler_view: RecyclerView
+    lateinit var nameAdapter: NameAdapter
+    lateinit var add_button: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 포크용 변경
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val number_text: TextView = findViewById(R.id.number_text)
-        val count_btn: TextView = findViewById(R.id.count_btn)
-        val toast_btn: TextView = findViewById(R.id.toast_btn)
-        val random_btn: TextView = findViewById(R.id.random_btn)
-        val intent = Intent(this, RandomActivity::class.java)
 
-        val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                number_text.text = result.data?.getIntExtra("random_number", 0).toString()
-                Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show()
+        name_text = findViewById(R.id.name_text)
+        recycler_view = findViewById(R.id.recycler_view)
+        nameAdapter = NameAdapter(nameList) { position ->showDeleteDialog(position)}
+        add_button = findViewById(R.id.add_button)
+
+        recycler_view.layoutManager = LinearLayoutManager(this)
+        recycler_view.adapter = nameAdapter
+
+        add_button.setOnClickListener {
+            nameList.add(name_text.text.toString())
+            nameAdapter.notifyItemInserted(nameList.size - 1)
+            name_text.setText("")
+        }
+    }
+
+    private fun showDeleteDialog(position: Int) {
+        AlertDialog.Builder(this)
+            .setTitle("이름 목록 삭제하기")
+            .setMessage("이름 목록을 삭제해보자.")
+            .setPositiveButton("확인") { dialog, _ ->
+                showEditDialog(position)
+                dialog.dismiss()
             }
-            else {
-                Toast.makeText(this, "오류", Toast.LENGTH_SHORT).show()
+            .setNegativeButton("취소") { dialog, _ ->
+                dialog.dismiss()
             }
+            .create()
+            .show()
+    }
+    private fun showEditDialog(position: Int) {
+        val editText = EditText(this).apply {
+            hint = "수정할 이름을 입력하세요."
+            setText("")
         }
 
-        count_btn.setOnClickListener {
-            number_text.text = (number_text.text.toString().toInt()+1).toString()
-        }
-        toast_btn.setOnClickListener {
-            Toast.makeText(this, "숫자 : "+number_text.text, Toast.LENGTH_LONG).show()
-        }
-        random_btn.setOnClickListener {
-            intent.putExtra("number", number_text.text.toString().toInt())
-            resultLauncher.launch(intent)
-        }
+        AlertDialog.Builder(this)
+            .setTitle(" ")
+            .setView(editText)
+            .setPositiveButton("확인") { _, _ ->
+                nameList[position] = editText.text.toString()
+                nameAdapter.notifyItemChanged(position)
+            }
+            .setNegativeButton("취소") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 }
