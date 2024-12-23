@@ -1,74 +1,29 @@
 package com.example.assignment02
 
-import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import android.os.Bundle
+import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity() {
 
-    val nameList = mutableListOf<String>()
-    //1
-
-    lateinit var name_text: EditText
-    lateinit var recycler_view: RecyclerView
-    lateinit var nameAdapter: NameAdapter
-    lateinit var add_button: Button
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 포크용 변경
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        name_text = findViewById(R.id.name_text)
-        recycler_view = findViewById(R.id.recycler_view)
-        nameAdapter = NameAdapter(nameList) { position ->showDeleteDialog(position)}
-        add_button = findViewById(R.id.add_button)
+        val isFromNotification = intent?.getBooleanExtra("Notification", false) ?: false
+        val data = intent?.getIntExtra("number", 0) ?: 0
 
-        recycler_view.layoutManager = LinearLayoutManager(this)
-        recycler_view.adapter = nameAdapter
-
-        add_button.setOnClickListener {
-            nameList.add(name_text.text.toString())
-            nameAdapter.notifyItemInserted(nameList.size - 1)
-            name_text.setText("")
-        }
-    }
-
-    private fun showDeleteDialog(position: Int) {
-        AlertDialog.Builder(this)
-            .setTitle("이름 목록 삭제하기")
-            .setMessage("이름 목록을 삭제해보자.")
-            .setPositiveButton("확인") { dialog, _ ->
-                showEditDialog(position)
-                dialog.dismiss()
-            }
-            .setNegativeButton("취소") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .create()
-            .show()
-    }
-    private fun showEditDialog(position: Int) {
-        val editText = EditText(this).apply {
-            hint = "수정할 이름을 입력하세요."
-            setText("")
+        val fragment: Fragment = if (isFromNotification) {
+            // Notification을 통해 실행된 경우 FragmentB 로드 및 데이터 전달
+            RandomFragment.newInstance(data)
+        } else {
+            // 기본적으로 FragmentA 로드
+            CountFragment.newInstance(0)
         }
 
-        AlertDialog.Builder(this)
-            .setTitle(" ")
-            .setView(editText)
-            .setPositiveButton("확인") { _, _ ->
-                nameList[position] = editText.text.toString()
-                nameAdapter.notifyItemChanged(position)
-            }
-            .setNegativeButton("취소") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .create()
-            .show()
+        // 선택된 Fragment를 동적으로 할당
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .commit()
     }
 }
