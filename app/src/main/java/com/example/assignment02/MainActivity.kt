@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 class MainActivity : AppCompatActivity() {
 
     val nameList = mutableListOf<String>()
+    //1
 
     lateinit var name_text: EditText
     lateinit var recycler_view: RecyclerView
