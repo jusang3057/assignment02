@@ -39,7 +39,9 @@ class RandomFragment : Fragment() {
             currentNumber = it.getInt("randomNumber", 0)
         }
 
-        currentNumber = (0..currentNumber-1).random()
+        if (currentNumber>=1) {
+            currentNumber = (0..currentNumber - 1).random()
+        }
         number_number.text = currentNumber.toString()
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
