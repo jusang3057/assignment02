@@ -29,4 +29,8 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
 }

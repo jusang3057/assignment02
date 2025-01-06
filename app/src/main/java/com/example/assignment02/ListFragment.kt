@@ -1,27 +1,35 @@
 package com.example.assignment02
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ContentResolver
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.os.BatteryManager
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.io.File
 
 class ListFragment : Fragment() {
 
     private val data = mutableListOf<Item>()
     private lateinit var adapter: Adapter
+    private lateinit var name: TextView
+    private lateinit var time: TextView
+    private lateinit var energy: LinearLayout
 
     companion object {
         fun newInstance(): ListFragment {
@@ -29,27 +37,45 @@ class ListFragment : Fragment() {
         }
     }
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
 
+        name = view.findViewById(R.id.name)
+        time = view.findViewById(R.id.time)
+        energy = view.findViewById(R.id.energe)
+
+        // 배터리에 따라 배경색 변경하기!
+        val battery = getBatteryData(requireContext()) // 0~100(%)
+        energy.backgroundTintList = ColorStateList.valueOf(ColorUtils.blendARGB(Color.parseColor("#00B0FF"), Color.parseColor("#FFFFFF"), battery / 100f))
+
         val recycler_list: RecyclerView = view.findViewById(R.id.recycler_list)
         recycler_list.layoutManager = LinearLayoutManager(requireContext())
-        adapter = Adapter(data)
+        adapter = Adapter(data, name, time)
         recycler_list.adapter = adapter
 
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
         ) {
-            // 권한이 있음 -> 음악 파일 추가
-            getMusicFilesData()
-        } else {
-            // 권한이 없음
             openFragment()
+        }
+        else if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.FOREGROUND_SERVICE) != PackageManager.PERMISSION_GRANTED
+        ) {
+            openFragment()
+        }
+        else {
+            // 권한이 있음
+            getMusicFilesData()
         }
 
         return view
+    }
+
+    fun getBatteryData(context: Context): Int {
+        val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
+        return batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
     }
 
     fun getMusicFilesData() {
@@ -71,9 +97,7 @@ class ListFragment : Fragment() {
             val dataIndex = it.getColumnIndex(MediaStore.Audio.Media.DATA)
 
             while (it.moveToNext()) {
-                Log.d("File Path", "음악 파일 경로: ${it.getString(dataIndex)}")
-
-                val item = Item(it.getString(titleIndex) ?: "Unknown Title", it.getString(artistIndex) ?: "Unknown Artist", it.getLong(durationIndex) ?: 0)
+                val item = Item(it.getString(titleIndex) ?: "Unknown Title", it.getString(artistIndex) ?: "Unknown Artist", it.getLong(durationIndex) ?: 0, it.getString(dataIndex) ?: "")
                 data.add(item)
             }
             adapter.notifyDataSetChanged()
@@ -91,7 +115,7 @@ class ListFragment : Fragment() {
             .commit()
     }
 
-    class Adapter(private val data: MutableList<Item>) : RecyclerView.Adapter<Adapter.ViewHolder>() {
+    class Adapter(private val data: MutableList<Item>, private var name_view:TextView, private var time_view:TextView) : RecyclerView.Adapter<Adapter.ViewHolder>() {
 
         class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val title: TextView = itemView.findViewById(R.id.title)
@@ -111,11 +135,19 @@ class ListFragment : Fragment() {
             val m = (item.duration/60000).toString()
             val s = (item.duration/1000 %60).toString()
             holder.duration.text =  "$m:$s"
+
+            holder.itemView.setOnClickListener {
+                name_view.text = item.title
+                time_view.text = holder.duration.text
+                val intent = Intent(holder.itemView.context, PlayMusic::class.java).apply {
+                    putExtra("uri", item.uri)
+                }
+                ContextCompat.startForegroundService(holder.itemView.context, intent)
+            }
         }
 
         override fun getItemCount(): Int = data.size
     }
 
-    data class Item(val title: String, val artist: String, val duration: Long)
-
+    data class Item(val title: String, val artist: String, val duration: Long, val uri: String)
 }
