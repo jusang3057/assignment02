@@ -1,42 +1,57 @@
 package com.example.assignment02
 
-import android.app.Activity
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var bottom_nav: BottomNavigationView
+    private lateinit var view_page: ViewPager2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val number_text: TextView = findViewById(R.id.number_text)
-        val count_btn: TextView = findViewById(R.id.count_btn)
-        val toast_btn: TextView = findViewById(R.id.toast_btn)
-        val random_btn: TextView = findViewById(R.id.random_btn)
-        val intent = Intent(this, RandomActivity::class.java)
 
-        val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                number_text.text = result.data?.getIntExtra("random_number", 0).toString()
-                Toast.makeText(this, "OK", Toast.LENGTH_SHORT).show()
-            }
-            else {
-                Toast.makeText(this, "오류", Toast.LENGTH_SHORT).show()
-            }
-        }
+        view_page = findViewById(R.id.viewPage)
+        bottom_nav = findViewById(R.id.bottomNav)
+        view_page.adapter = ColorAdapter(this)
 
-        count_btn.setOnClickListener {
-            number_text.text = (number_text.text.toString().toInt()+1).toString()
+        bottom_nav.setOnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.color -> {
+                    view_page.adapter = ColorAdapter(this)
+                }
+                R.id.number -> {
+                    view_page.adapter = NumberAdapter(this)
+                }
+                R.id.alphabet -> {
+                    view_page.adapter = AlphabetAdapter(this)
+                }
+            }
+            true
         }
-        toast_btn.setOnClickListener {
-            Toast.makeText(this, "숫자 : "+number_text.text, Toast.LENGTH_LONG).show()
+    }
+    class ColorAdapter(fragment: MainActivity) : FragmentStateAdapter(fragment) {
+        override fun getItemCount(): Int = 7
+        override fun createFragment(position: Int): Fragment {
+            return TextFragment.newInstance("", position)
         }
-        random_btn.setOnClickListener {
-            intent.putExtra("number", number_text.text.toString().toInt())
-            resultLauncher.launch(intent)
+    }
+    class NumberAdapter(fragment: MainActivity) : FragmentStateAdapter(fragment) {
+        override fun getItemCount(): Int = Int.MAX_VALUE
+        override fun createFragment(position: Int): Fragment {
+            return TextFragment.newInstance((position+1).toString(), 7)
+        }
+    }
+    class AlphabetAdapter(fragment: MainActivity) : FragmentStateAdapter(fragment) {
+        override fun getItemCount(): Int = 26
+        override fun createFragment(position: Int): Fragment {
+            return TextFragment.newInstance(('a'+position).toString(), 7)
         }
     }
 }
+
