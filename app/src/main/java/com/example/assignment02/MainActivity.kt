@@ -36,22 +36,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
     class ColorAdapter(fragment: MainActivity) : FragmentStateAdapter(fragment) {
-        private val pageCount = 7
-        override fun getItemCount(): Int = pageCount
+        override fun getItemCount(): Int = 7
         override fun createFragment(position: Int): Fragment {
             return TextFragment.newInstance("", position)
         }
     }
     class NumberAdapter(fragment: MainActivity) : FragmentStateAdapter(fragment) {
-        private val pageCount = Int.MAX_VALUE
-        override fun getItemCount(): Int = pageCount
+        override fun getItemCount(): Int = Int.MAX_VALUE
         override fun createFragment(position: Int): Fragment {
             return TextFragment.newInstance((position+1).toString(), 7)
         }
     }
     class AlphabetAdapter(fragment: MainActivity) : FragmentStateAdapter(fragment) {
-        private val pageCount = 26
-        override fun getItemCount(): Int = pageCount
+        override fun getItemCount(): Int = 26
         override fun createFragment(position: Int): Fragment {
             return TextFragment.newInstance(('a'+position).toString(), 7)
         }
