@@ -7,7 +7,12 @@
     <layouts>
       <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
         <config>
-          <theme>@style/Theme.Assign13</theme>
+          <theme>@style/Theme.Application1</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/app/src/main/res/layout/item_repo.xml">
+        <config>
+          <theme>@style/Theme.Application1</theme>
         </config>
       </layout>
     </layouts>
@@ -16,7 +21,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dce3ce5c-3812-422a-8557-4ef9f06e4ea7" name="Changes" comment="" />
+    <list default="true" id="af3859c7-6405-4408-b2b3-bf2b54b2912e" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,7 +30,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=C:\Users\상상\.android\avd\Medium_Phone_API_33.avd)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=PhysicalDevice, isTemplate=false, identifier=serial=R3CMB05SW2L)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -34,16 +39,15 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="layoutResourceFile_vertical" />
-        <option value="Class" />
+        <option value="layoutResourceFile" />
         <option value="Kotlin Class" />
       </list>
     </option>
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1
+  "associatedIndex": 3
 }]]></component>
-  <component name="ProjectId" id="2spalbNBZvjGdHmN8XmcNeNcxvU" />
+  <component name="ProjectId" id="2t97vfJgfMscFxg8Nl00lZ1ONEo" />
   <component name="ProjectViewState">
     <option name="autoscrollToSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -61,9 +65,14 @@
     "settings.editor.selected.configurable": "AndroidSdkUpdater"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="com.example.application1.view" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="app" type="AndroidRunConfigurationType" factoryName="Android App" activateToolWindowBeforeRun="false">
-      <module name="assign13.app" />
+      <module name="Application1.app" />
       <option name="ANDROID_RUN_CONFIGURATION_SCHEMA_VERSION" value="1" />
       <option name="DEPLOY" value="true" />
       <option name="DEPLOY_APK_FROM_BUNDLE" value="false" />
@@ -137,30 +146,25 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="dce3ce5c-3812-422a-8557-4ef9f06e4ea7" name="Changes" comment="" />
-      <created>1739155121896</created>
+      <changelist id="af3859c7-6405-4408-b2b3-bf2b54b2912e" name="Changes" comment="" />
+      <created>1739752669320</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1739155121896</updated>
+      <updated>1739752669320</updated>
     </task>
     <servers />
   </component>
   <component name="play_dynamic_filters_status">
     <option name="appIdToCheckInfo">
       <map>
-        <entry key="com.example.assign13">
+        <entry key="com.example.application1">
           <value>
-            <CheckInfo lastCheckTimestamp="1739155406931" />
+            <CheckInfo lastCheckTimestamp="1739752753753" />
           </value>
         </entry>
-        <entry key="com.example.assign13.test">
+        <entry key="com.example.application1.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1739155415486" />
-          </value>
-        </entry>
-        <entry key="com.example.assign13.test">
-          <value>
-            <CheckInfo lastCheckTimestamp="1739155415486" />
+            <CheckInfo lastCheckTimestamp="1739752753751" />
           </value>
         </entry>
       </map>
